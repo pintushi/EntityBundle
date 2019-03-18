@@ -1,3 +1,8 @@
+parameters:
+    pintushi_entity.repository.factory.class:  Pintushi\Bundle\EntityBundle\ORM\Repository\EntityRepositoryFactory
+    doctrine.orm.configuration.class:  Pintushi\Bundle\EntityBundle\ORM\OrmConfiguration
+    doctrine.orm.entity_manager.class: Pintushi\Bundle\EntityBundle\ORM\EntityManager
+
 services:
     _defaults:
         autowire: true
@@ -70,3 +75,15 @@ services:
     Oro\Component\DoctrineUtils\ORM\QueryHintResolver: ~
 
     pintushi_entity.query_hint_resolver: '@Oro\Component\DoctrineUtils\ORM\QueryHintResolver'
+
+    pintushi_entity.abstract_repository:
+        class: Doctrine\ORM\EntityRepository
+        factory: ['@pintushi_entity.repository.factory', 'getDefaultRepository']
+        abstract: true
+
+    pintushi_entity.repository.factory:
+        class: '%pintushi_entity.repository.factory.class%'
+        public: false
+        arguments:
+            - '@service_container'
+            - [] # will be replaced with repository services array
